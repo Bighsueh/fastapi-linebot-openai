@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  line:
+    build: .
+    container_name: line_fastapi_container
+    environment:
+      MONGODB_HOST: "line_mongodb_container"
+      MONGODB_DATABASE: "conversationdb"
+      MONGODB_COLLECTION: "learning_companion"
+      LINE_ACCESS_TOKEN: ""
+      LINE_CHANNEL_SECRET: ""
+      GPT_API_URL: ""
+      
+    volumes:
+      - ./main.py:/app/main.py
+    ports:
+      - "25000:25000"
+    networks:
+      - line_agent_network
+
+  mongodb:
+    image: mongo
+    container_name: line_mongodb_container
+    ports:
+      - "27018:27017"
+    networks:
+      - line_agent_network
+
+networks:
+  line_agent_network:
