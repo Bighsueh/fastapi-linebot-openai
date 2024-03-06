@@ -12,18 +12,23 @@ class ChatInfo(BaseModel):
 
 def callGPT(chat_info : ChatInfo):
     target_url = chat_info.api_url
+    
+    request_body = {
+            "engine": "gpt-35-turbo-16k",
+            "temperature": chat_info.temperature,
+            "max_tokens": chat_info.max_tokens,
+            "top_p": chat_info.top_p,
+            "top_k": 5,
+            "roles": chat_info.prompt_text,
+            "frequency_penalty": 0,
+            "repetition_penalty": 1.03,
+            "presence_penalty": 0,
+            "stop": "",
+            "past_messages": 10,
+            "purpose": chat_info.purpose
+        }
 
-    # 請求參數
-    params = {
-        "temperature": chat_info.temperature,
-        "max_tokens": chat_info.max_tokens,
-        "top_p": chat_info.top_p,
-        "purpose": chat_info.purpose
-    }
-
-    request_body = chat_info.prompt_text
-
-    response = requests.post(target_url, json=request_body, params=params)
+    response = requests.post(target_url, json=request_body)
 
     if response.status_code == 200:
         result = response.json()
